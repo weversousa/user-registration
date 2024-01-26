@@ -1,0 +1,17 @@
+{
+    "name": "Java 17",
+    "dockerComposeFile": ["../docker-compose.yaml"],
+    "service": "user-registration-service",
+    "workspaceFolder": "/home/weverton/user-registration/",
+    "forwardPorts": [8081],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "cweijan.vscode-mysql-client2",
+                "humao.rest-client",
+                "vscjava.vscode-gradle",
+                "vscjava.vscode-java-pack"
+            ]
+        }
+    }
+}

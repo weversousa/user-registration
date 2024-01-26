@@ -1,0 +1,44 @@
+version: '4.0'
+
+networks:
+  sgbd-postgresql-network:
+    name: sgbd-postgresql-network
+    driver: bridge
+    external: false
+
+services:
+  sgbd-postgresql-service:
+    container_name: sgbd-postgresql-service
+    image: postgres:16.1-alpine3.19
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${PROJECT_NAME}
+    volumes:
+      - ./data/postgre-sql/:/var/lib/postgresql/data
+    networks:
+      - sgbd-postgresql-network
+    ports:
+      - 5432:5432
+    restart: always
+
+  user-registration-service:
+    container_name: user-registration-service
+    image: wever/amazoncorretto:17-alpine3.18-jdk
+    env_file:
+      - ./.env
+    build:
+      args:
+        - USER_NAME=${USER}
+        - PROJECT_NAME=${PROJECT_NAME}
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/home/${USER}/${PROJECT_NAME}/
+    networks:
+      - sgbd-postgresql-network
+    ports:
+      - 8081:8081
+    depends_on:
+      - sgbd-postgresql-service
